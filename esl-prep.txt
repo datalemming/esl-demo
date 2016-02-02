@@ -1,0 +1,150 @@
+1/2/16
+
+RAn update and upgrade.
+Issue with Grub, think I cleared it.
+VM restarted successfully.
+
+Now to load riak ts 1.1:
+Downloaded Trusty Tahr (misspelled) version to accord with Mint version running here.
+Downloaded successfully.
+Installed through gDebi.
+Need to check working etc.
+When found instructions needed to install dependencies:
+
+$sudo apt-get install libpam0g-dev
+
+then reinstalled via:
+
+$sudo dpkg -i riak-ts_1.1.0-1_amd64.deb
+and checked anti_entropy=passive in conf file.  
+
+$ riak start
+You need to be root or use sudo to run this command
+stephen@ste-vb ~/Downloads $ sudo riak start
+!!!!
+!!!! WARNING: ulimit -n is 1024; 65536 is the recommended minimum.
+!!!!
+Need to check the ulimits.
+
+Added
+# ulimit settings for Riak TS
+root soft nofile 65536
+root hard nofile 65536
+riak soft nofile 65536
+riak hard nofile 65536
+To /etc/security/limits.conf
+
+also activated as sudo for session.
+
+$ sudo ulimit -n 65536
+ulimit claimed not found.  Restarted the VM.
+
+On restart:
+
+$ ps -ef|grep riak
+riak      1982     1  0 09:07 ?        00:00:00 /usr/lib/riak/erts-5.10.3/bin/epmd -daemon
+riak      2116     1  0 09:07 ?        00:00:00 /usr/lib/riak/erts-5.10.3/bin/run_erl -daemon /tmp/riak// /var/log/riak exec /usr/sbin/riak console
+riak      2117  2116  6 09:07 pts/0    00:00:02 /usr/lib/riak/erts-5.10.3/bin/beam.smp -scl false -sfwi 500 -P 256000 -e 256000 -Q 65536 -A 64 -K true -W w -zdbbl 32768 -- -root /usr/lib/riak -progname riak -- -home /var/lib/riak -- -boot /usr/lib/riak/releases/2.1.1/riak -config /var/lib/riak/generated.configs/app.2016.02.01.09.07.44.config -setcookie riak -name riak@127.0.0.1 -smp enable -vm_args /var/lib/riak/generated.configs/vm.2016.02.01.09.07.44.args -pa /usr/lib/riak/lib/basho-patches -- console
+riak      2329  2117  0 09:07 ?        00:00:00 sh -s disksup
+riak      2331  2117  0 09:07 ?        00:00:00 /usr/lib/riak/lib/os_mon-2.2.13/priv/bin/memsup
+riak      2332  2117  0 09:07 ?        00:00:00 /usr/lib/riak/lib/os_mon-2.2.13/priv/bin/cpu_sup
+stephen   3397  3335  0 09:08 pts/3    00:00:00 grep --colour=auto riak
+
+$ dpkg -l | grep riak
+
+gave
+
+ii  riak-ts                                     1.1.0-1                                             amd64        Riak is a distributed data store
+
+$ sudo riak ping
+pong
+
+$ sudo riak-admin test
+Successfully completed 1 read/write cycle to 'riak@127.0.0.1'
+
+Installed curl.
+
+$ curl -v http://127.0.0.1:8098/types/default/props
+* Hostname was NOT found in DNS cache
+*   Trying 127.0.0.1...
+* Connected to 127.0.0.1 (127.0.0.1) port 8098 (#0)
+> GET /types/default/props HTTP/1.1
+> User-Agent: curl/7.35.0
+> Host: 127.0.0.1:8098
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< Vary: Accept-Encoding
+* Server MochiWeb/1.1 WebMachine/1.10.8 (that head fake, tho) is not blacklisted
+< Server: MochiWeb/1.1 WebMachine/1.10.8 (that head fake, tho)
+< Date: Mon, 01 Feb 2016 09:13:05 GMT
+< Content-Type: application/json
+< Content-Length: 459
+< 
+* Connection #0 to host 127.0.0.1 left intact
+{"props":{"allow_mult":false,"basic_quorum":false,"big_vclock":50,"chash_keyfun":{"mod":"riak_core_util","fun":"chash_std_keyfun"},"dvv_enabled":false,"dw":"quorum","last_write_wins":false,"linkfun":{"mod":"riak_kv_wm_link_walker","fun":"mapreduce_linkfun"},"n_val":3,"notfound_ok":true,"old_vclock":86400,"postcommit":[],"pr":0,"precommit":[],"pw":0,"r":"quorum","repl":true,"rw":"quorum","small_vclock":50,"w":"quorum","write_once":false,"young_vclock":20}}
+
+Appears to be working.
+
+Need to install python client now.
+
+Prereqs
+$ sudo apt-get install -y python-setuptools python-dev libffi-dev libssl-dev
+
+Also installed python pip.
+
+Need to install jupyter and virtualenv.
+
+$ sudo pip install --upgrade pip
+$ sudo pip install --upgrade virtualenv
+
+apt-get installed build-essential
+
+Created a venv for ESL, called ESL
+
+$ virtualenv .
+$ source ./bin/activate
+$ deactivate
+
+
+$ pip install jupyter
+$ pip install riak
+
+Seemed to install ok.  
+***Need to test it
+
+Created a clone VM called esl-demo.  Changed hostname.  Restarted.  Updated and upgraded.
+
+Need to test the python client.
+
+Ports
+http:8098
+pb:8087
+
+Started jupyter.
+Created notebook "Initial tests".  Client instantiates and can ping the server/db.
+
+
+2/2/16
+===
+
+To do
+---
+*Source time series datasets - done, use HVAC.csv sensor data as downloaded
+*Table design research
+*Design table
+*Create table
+*Test table and querying
+
+
+created git repository for the files
+https://github.com/datalemming/esl-demo.git
+
+git add .
+git config --global user.email "stephen.etheridge@gmail.com"
+git config --global user.name "datalemming"
+git commit -a
+git remote add origin https://github.com/datalemming/esl-demo.git
+git push
+
+created README.md on git hub and pulled that down.  Will move this file to the git dir and commit.
