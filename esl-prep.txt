@@ -148,3 +148,84 @@ git remote add origin https://github.com/datalemming/esl-demo.git
 git push
 
 created README.md on git hub and pulled that down.  Will move this file to the git dir and commit.
+
+4/2/16
+===
+
+Create table through the client.  
+
+"CREATE TABLE hvac (
+	buildingid varchar not null,
+	systemid varchar not null,
+	readingtime timestamp not null,
+	systemage sint not null,
+	targettemp sint not null,
+	actualtemp sint not null,
+	primary key ((buildingid, systemid,quantum(readingtime,1,d)),buildingid,systemid,readingtime))"
+
+Documentation says to create table as a query, but there is no example and too many unanswered questions.  The only query level operations are mapred and secondary index, unless you are supposed to create a bucket type first.  NEED BETTER DOCUMENTATION.
+
+For time being will do this via riak admin
+
+$ sudo su riak
+$ riak-admin bucket-type create hvac '{"props":{"table_def":"CREATE TABLE hvac (buildingid varchar not null,systemid varchar not null,readingtime timestamp not null,systemage sint64 not null,targettemp sint64 not null,actualtemp sint64 not null,primary key ((buildingid, systemid,quantum(readingtime,1,d)),buildingid,systemid,readingtime))"}}'
+hvac created
+
+WARNING: After activating hvac, nodes in this cluster
+can no longer be downgraded to a version of Riak prior to 2.0
+
+$ riak-admin bucket-type activate hvac
+hvac has been activated
+
+WARNING: Nodes in this cluster can no longer be
+downgraded to a version of Riak prior to 2.0
+
+
+Checked description via python client
+
+$ riak-admin bucket-type status hvac
+hvac is active
+
+young_vclock: 20
+w: quorum
+small_vclock: 50
+rw: quorum
+r: quorum
+pw: 0
+precommit: []
+pr: 0
+postcommit: []
+old_vclock: 86400
+notfound_ok: true
+n_val: 3
+linkfun: {modfun,riak_kv_wm_link_walker,mapreduce_linkfun}
+last_write_wins: false
+dw: quorum
+dvv_enabled: true
+ddl: {ddl_v1,<<"hvac">>,
+             [{riak_field_v1,<<"buildingid">>,1,varchar,false},
+              {riak_field_v1,<<"systemid">>,2,varchar,false},
+              {riak_field_v1,<<"readingtime">>,3,timestamp,false},
+              {riak_field_v1,<<"systemage">>,4,sint64,false},
+              {riak_field_v1,<<"targettemp">>,5,sint64,false},
+              {riak_field_v1,<<"actualtemp">>,6,sint64,false}],
+             {key_v1,[{param_v1,[<<"buildingid">>]},
+                      {param_v1,[<<"systemid">>]},
+                      {hash_fn_v1,riak_ql_quanta,quantum,
+                                  [{param_v1,[<<"readingtime">>]},1,d],
+                                  timestamp}]},
+             {key_v1,[{param_v1,[<<"buildingid">>]},
+                      {param_v1,[<<"systemid">>]},
+                      {param_v1,[<<"readingtime">>]}]}}
+chash_keyfun: {riak_core_util,chash_std_keyfun}
+big_vclock: 50
+basic_quorum: false
+allow_mult: true
+write_once: true
+active: true
+claimant: 'riak@127.0.0.1'
+
+
+
+
+
