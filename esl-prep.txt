@@ -226,6 +226,23 @@ active: true
 claimant: 'riak@127.0.0.1'
 
 
+5/2/16
+===
+Moved onto querying the data.  Initial query was:
+
+qs="""
+    select * from hvac2
+"""
+myClient.ts_query('hvac2',qs)
+
+but this resulted in error - needs a WHERE clause.  Reverted to documentation.  The quantum is too low, it would b e better with a q of 30 days.  Tackled setting this up in new ipynb called "Create table QUANTUM 30D".
+
+***Querying for a range in PK not just time is very cumbersome.  Almost better in my case to have buildingid and systemid as secondary cols so they can be queried on.  Really need to think hard about the data model and the likely query patterns.  You may have to put in dummy fields for the non-time parts of the key.
+
+
+
+
+
 
 
 
