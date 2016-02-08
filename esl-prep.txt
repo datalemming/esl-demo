@@ -239,6 +239,13 @@ but this resulted in error - needs a WHERE clause.  Reverted to documentation.  
 
 ***Querying for a range in PK not just time is very cumbersome.  Almost better in my case to have buildingid and systemid as secondary cols so they can be queried on.  Really need to think hard about the data model and the likely query patterns.  You may have to put in dummy fields for the non-time parts of the key.
 
+8/2/16
+===
+Following the issues with the primary key will create a new table and primaru key with dummy values.  Massage the data file in LO.
+
+Created new file of input data with Family=Family and Series=Series.  Now to load that into TS.
+
+Number of issues due to my own stupidity.  Finally created table hvacnew3 and loaded the amended datafile into it.  This allows me to do the querying I wanted to do.  Yipeee!!!!!!!!!
 
 
 
