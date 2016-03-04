@@ -1,0 +1,11 @@
+Move to TS 1.2
+===
+
+Downloaded file from https://help.basho.com/entries/109111966-1-2-0-Release?flash_digest=8236386d01cf40a03aa759dcf28a95fd504092c2
+
+Links not working on that page.
+
+NB
+For security reasons, you should change the owner of the /etc/init.d/riak file to the root user after installation has completed. See our product advisory for more information and further instruction.
+
+Did not work.  Uninstalled Riak package to try again. Restarted machine.  Completely removed Riak with apt and some deletions.  Restarted machine again.

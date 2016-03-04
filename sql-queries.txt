@@ -1,0 +1,13 @@
+select * from hvacnew3 WHERE  readingtime > 1370044800000 and readingtime < 1371600001000 and family = 'Family' and series= 'Series';
+
+select * from hvacnew3 WHERE  readingtime > 1370044800000 and readingtime < 1377993540000 and family='Family' and series='Series' and buildingid = 2 and systemid <20;
+
+select COUNT(*) from hvacnew3 WHERE  readingtime > 1370044800000 and readingtime < 1377993540000 and family='Family' and series='Series' and buildingid=2 and systemid<20;
+    
+select MIN(actualtemp) from hvacnew3 WHERE  readingtime > 1370044800000 and readingtime < 1377993540000 and family='Family' and series='Series' and buildingid = 2 and systemid <20;
+    
+select MAX(actualtemp) from hvacnew3 WHERE  readingtime > 1370044800000 and readingtime < 1377993540000 and family='Family' and series='Series'and buildingid = 2 and systemid <20;
+    
+select readingtime, systemid, max(targettemp - actualtemp) from hvacnew3 WHERE  readingtime > 1370044800000 and readingtime < 1377993540000 and family='Family' and series='Series' and buildingid = 2 and systemid <20;
+    
+select readingtime, systemid, min(targettemp - actualtemp) from hvacnew3 WHERE  readingtime > 1370044800000 and readingtime < 1377993540000 and family='Family' and series='Series' and buildingid = 2 and systemid <20;
